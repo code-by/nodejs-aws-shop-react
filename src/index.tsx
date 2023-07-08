@@ -4,9 +4,23 @@ import App from "~/components/App/App";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import axios, { AxiosError, AxiosResponse } from "axios";
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response.status;
+    if (status === 403) {
+      alert("403 Forbidden");
+    } else if (status === 401) {
+      alert("401 Not authorized");
+    }
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
